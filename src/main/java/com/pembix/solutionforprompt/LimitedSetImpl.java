@@ -1,15 +1,12 @@
 package com.pembix.solutionforprompt;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class LimitedSetImpl<T> implements LimitedSet<T> {
 
     private int capacity = 10;
-    private Set<T> elements = new HashSet<>();
-    private Map<T, Integer> callsPerElement = new HashMap<>();
+    private Map<T, Integer> elements = new HashMap<>();
 
     LimitedSetImpl() {
     }
@@ -19,13 +16,8 @@ public class LimitedSetImpl<T> implements LimitedSet<T> {
     }
 
     //for testing purposes
-    Set<T> getElements() {
+    Map<T, Integer> getElements() {
         return elements;
-    }
-
-    //for testing purposes
-    Map<T, Integer> getCallsPerElement() {
-        return callsPerElement;
     }
 
     public void add(T o) {
@@ -33,20 +25,19 @@ public class LimitedSetImpl<T> implements LimitedSet<T> {
             //remove element with the least number of calls
             removeUnpopularElement();
         }
-        if (elements.add(o)) {
-            //if this object is not duplicate of the other object in the set, then we put zero for a number of calls
-            callsPerElement.put(o, 0);
+        //if elements contains key, number of calls contains() should be preserved
+        if (!elements.containsKey(o)) {
+            elements.put(o, 0);
         }
     }
 
     public boolean remove(T o) {
-        callsPerElement.remove(o);
-        return elements.remove(o);
+        return elements.remove(o) == null ? false : true;
     }
 
     public boolean contains(T o) {
-        if (elements.contains(o)) {
-            callsPerElement.put(o, callsPerElement.get(o) + 1);
+        if (elements.containsKey(o)) {
+            elements.put(o, elements.getOrDefault(o, 0) + 1);
             return true;
         } else {
             return false;
@@ -54,11 +45,11 @@ public class LimitedSetImpl<T> implements LimitedSet<T> {
     }
 
     private void removeUnpopularElement() {
-        Map.Entry<T, Integer> firstEntry = callsPerElement.entrySet().iterator().next();
+        Map.Entry<T, Integer> firstEntry = elements.entrySet().iterator().next();
         T toBeDeleted = firstEntry.getKey();
         Integer minimum = firstEntry.getValue();
 
-        for (Map.Entry<T, Integer> entry : callsPerElement.entrySet()) {
+        for (Map.Entry<T, Integer> entry : elements.entrySet()) {
             if (entry.getValue() < minimum) {
                 minimum = entry.getValue();
                 toBeDeleted = entry.getKey();
@@ -66,6 +57,5 @@ public class LimitedSetImpl<T> implements LimitedSet<T> {
         }
 
         elements.remove(toBeDeleted);
-        callsPerElement.remove(toBeDeleted);
     }
 }
