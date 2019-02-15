@@ -21,12 +21,12 @@ public class LimitedSetImpl<T> implements LimitedSet<T> {
     }
 
     public void add(T o) {
-        if (elements.size() >= capacity) {
-            //remove element with the least number of calls
-            removeUnpopularElement();
-        }
         //if elements contains key, number of calls contains() should be preserved
         if (!elements.containsKey(o)) {
+            if (elements.size() >= capacity) {
+                //remove element with the least number of calls
+                removeUnpopularElement();
+            }
             elements.put(o, 0);
         }
     }

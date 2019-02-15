@@ -14,7 +14,7 @@ public class LimitedSetImplTest {
             impl.add("String " + i);
         }
         impl.contains("String 5");
-        //if object is duplicate, number of contains should be reset
+        //if object is duplicate, number of contains should stay the same
         impl.add("String 5");
         impl.add("String 6");
         impl.remove("String 6");
