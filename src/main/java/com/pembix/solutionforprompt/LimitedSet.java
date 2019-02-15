@@ -1,6 +1,6 @@
 package com.pembix.solutionforprompt;
 
-public interface LimitedSet<T> {
+public interface LimitedSet<T extends Comparable> {
 
     void add(final T t);
 
